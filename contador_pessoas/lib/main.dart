@@ -12,6 +12,11 @@ void main() {
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
               )),
+          Text("Pode entrar!", style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontStyle: FontStyle.italic
+          ))
         ],
       )));
 }
