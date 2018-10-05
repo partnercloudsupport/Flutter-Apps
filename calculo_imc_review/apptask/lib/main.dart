@@ -15,6 +15,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  // funcionalidades
+  
   @override
   Widget build(BuildContext context) {
     // Widget Scaffold
@@ -39,7 +41,9 @@ class _HomeState extends State<Home> {
     ),
     // Esse Widget permite rolar a tela quando o app precisar
     // só tem um child
-    body: SingleChildScrollView(
+    body: Padding(
+      padding: EdgeInsets.all(10.0),
+      child: SingleChildScrollView(
       child: Column(
       // Alinha os filhos da coluna no centro (não entendi pq stretch)
       // O uso do stretch é para ele alinhar o eixo cruzado
@@ -71,19 +75,28 @@ class _HomeState extends State<Home> {
             )
           ),
         ),
-        // O botao ficará dentro do container para podermos mudarmos seu tamanho
-        Container(
-          height: 80.0,
-          child: RaisedButton(
-          color: Colors.blueGrey,
-          onPressed: () {},
-          child: Text("Calcular", style: TextStyle(fontSize: 22.0, color: Colors.white,
-            fontWeight: FontWeight.bold
-            )
-          ,) 
+        // Padding no botao para espaçar o texto de baixo
+        Padding(
+          padding: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
+          // O botao ficará dentro do container para podermos mudarmos seu tamanho
+          child: Container(
+            height: 80.0,
+            child: RaisedButton(
+              color: Colors.blueGrey,
+              onPressed: () {},
+                child: Text("Calcular", style: TextStyle(fontSize: 22.0, color: Colors.white,
+                  fontWeight: FontWeight.bold
+                  )
+                ,) 
+            ),
           ),
         ),
+        Text("Info", 
+          style: TextStyle(fontSize: 32.0, color: Colors.white),
+          textAlign: TextAlign.center,
+        )
     ],),
+    )
     )
     );
   }
