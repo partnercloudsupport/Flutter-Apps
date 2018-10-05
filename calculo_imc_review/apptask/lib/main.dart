@@ -20,12 +20,12 @@ class _HomeState extends State<Home> {
     // Widget Scaffold
     return Scaffold(
       // cor de fundo do app
-      backgroundColor: Colors.blueGrey,
+      backgroundColor: Colors.lightBlue[800],
         // Barra do app com texto
         appBar: AppBar(
       title: Text("Calculadora IMC"),
       centerTitle: true,
-          backgroundColor: Colors.lightBlue[800],
+          backgroundColor: Colors.blueGrey,
           // onde irá acontecer as ações da AppBar
           actions: <Widget>[
             // IconButton se comporta igual o Button
@@ -37,7 +37,10 @@ class _HomeState extends State<Home> {
             )
           ],
     ),
-    body: Column(
+    // Esse Widget permite rolar a tela quando o app precisar
+    // só tem um child
+    body: SingleChildScrollView(
+      child: Column(
       // Alinha os filhos da coluna no centro (não entendi pq stretch)
       // O uso do stretch é para ele alinhar o eixo cruzado
       // como o eixo principal da coluna é o vertical, o stretch vai alinhar
@@ -45,7 +48,7 @@ class _HomeState extends State<Home> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       // children: Icon, TextField
       children: <Widget>[
-      Icon(Icons.person_outline, size: 140.0, color: Colors.lightBlue[800],),
+      Icon(Icons.person, size: 140.0, color: Colors.blueGrey,),
       // Caixa de texto
       TextField(keyboardType: TextInputType.number,
       textAlign: TextAlign.center,
@@ -53,7 +56,7 @@ class _HomeState extends State<Home> {
         style: TextStyle( fontSize: 24.0, color: Colors.black),
         // decoração do TextField
         decoration: InputDecoration(labelText: "Peso (kg)",
-          labelStyle: TextStyle(color: Colors.black, fontSize: 24.0,
+          labelStyle: TextStyle(color: Colors.white, fontSize: 24.0,
             fontWeight: FontWeight.bold)
         ),
       ),
@@ -63,18 +66,25 @@ class _HomeState extends State<Home> {
         style: TextStyle( fontSize: 24.0, color: Colors.white),
         // decoração do TextField
         decoration: InputDecoration(labelText: "Altura (metros)",
-          labelStyle: TextStyle(color: Colors.black, fontSize: 24.0,
+          labelStyle: TextStyle(color: Colors.white, fontSize: 24.0,
             fontWeight: FontWeight.bold
             )
           ),
         ),
-        RaisedButton(
-          color: Colors.lightBlue[800],
+        // O botao ficará dentro do container para podermos mudarmos seu tamanho
+        Container(
+          height: 80.0,
+          child: RaisedButton(
+          color: Colors.blueGrey,
           onPressed: () {},
-          child: Text("Calcular", style: TextStyle(fontSize: 22.0, color: Colors.black)
+          child: Text("Calcular", style: TextStyle(fontSize: 22.0, color: Colors.white,
+            fontWeight: FontWeight.bold
+            )
           ,) 
-        )
+          ),
+        ),
     ],),
+    )
     );
   }
 }
