@@ -19,19 +19,30 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     // Widget Scaffold
     return Scaffold(
+      // cor de fundo do app
+      backgroundColor: Colors.blueGrey,
         // Barra do app com texto
         appBar: AppBar(
       title: Text("Calculadora IMC"),
       centerTitle: true,
-          backgroundColor: Colors.amber,
+          backgroundColor: Colors.lightBlue[800],
+          // onde irá acontecer as ações da AppBar
           actions: <Widget>[
+            // IconButton se comporta igual o Button
             IconButton(
-              icon: Icon(Icons.playlist_play),
+              icon: Icon(Icons.refresh, color: Colors.black,),
               onPressed: () {
-                debugPrint("botao apertado");
+                debugPrint("Refresh");
               },
             )
           ],
-    ));
+    ),
+    body: Column(
+      // Alinha os filhos da coluna no centro (não entendi pq stretch)
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+      Icon(Icons.person, size: 240.0,)
+    ],),
+    );
   }
 }
