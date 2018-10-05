@@ -16,7 +16,35 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   // funcionalidades
-  
+  // decalaração dos controladores
+  TextEditingController weightController = TextEditingController(); // controlador do peso
+  TextEditingController heightController = TextEditingController(); // controlador da altura
+
+  String textInfo = "Preencha os campos";
+
+  // função que reseta os campos
+  void _resetField() {
+    setState(() {
+      weightController.text = " ";
+      heightController.text = " ";
+      textInfo = "Preencha os campos";
+    });
+  }
+  // função que calcula o IMC
+  void _calculate() {
+    setState(() {
+      double height = double.parse(heightController.text);
+      double weight = double.parse(weightController.text);
+      double imc = weight / height;
+
+      if(imc < 18.6) {
+        textInfo = "abaixo do peso";
+      }else {
+        textInfo = "peso normal ou acima";
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // Widget Scaffold
@@ -33,9 +61,7 @@ class _HomeState extends State<Home> {
             // IconButton se comporta igual o Button
             IconButton(
               icon: Icon(Icons.refresh, color: Colors.black,),
-              onPressed: () {
-                debugPrint("Refresh");
-              },
+              onPressed: _resetField // função que reseta os campos 
             )
           ],
     ),
@@ -63,6 +89,8 @@ class _HomeState extends State<Home> {
           labelStyle: TextStyle(color: Colors.white, fontSize: 24.0,
             fontWeight: FontWeight.bold)
         ),
+        // Estou especificando que este será o controlador deste TextField        
+        controller: weightController,
       ),
       TextField(keyboardType: TextInputType.number,
         textAlign: TextAlign.center,
@@ -74,6 +102,8 @@ class _HomeState extends State<Home> {
             fontWeight: FontWeight.bold
             )
           ),
+          // Estou especificando que este será o controlador deste TextField
+          controller: heightController,
         ),
         // Padding no botao para espaçar o texto de baixo
         Padding(
@@ -83,7 +113,7 @@ class _HomeState extends State<Home> {
             height: 80.0,
             child: RaisedButton(
               color: Colors.blueGrey,
-              onPressed: () {},
+              onPressed: _calculate,
                 child: Text("Calcular", style: TextStyle(fontSize: 22.0, color: Colors.white,
                   fontWeight: FontWeight.bold
                   )
@@ -91,7 +121,7 @@ class _HomeState extends State<Home> {
             ),
           ),
         ),
-        Text("Info", 
+        Text(textInfo, 
           style: TextStyle(fontSize: 32.0, color: Colors.white),
           textAlign: TextAlign.center,
         )
