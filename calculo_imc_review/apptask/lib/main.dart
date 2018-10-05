@@ -19,11 +19,19 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     // Widget Scaffold
     return Scaffold(
-      // Barra do app com texto
-      appBar: AppBar(
-          title: Text("Calculadora IMC")
-      )
-    );
+        // Barra do app com texto
+        appBar: AppBar(
+      title: Text("Calculadora IMC"),
+      centerTitle: true,
+          backgroundColor: Colors.amber,
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.playlist_play),
+              onPressed: () {
+                debugPrint("botao apertado");
+              },
+            )
+          ],
+    ));
   }
 }
-
