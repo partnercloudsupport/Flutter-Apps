@@ -11,6 +11,7 @@ void main() async {
   // usamos o await para esperar os dados serem obtidos
   // para isso nossa função deve ser async!
   http.Response response = await http.get(request);
+  // Requisição feita com sucesso
   print(response.body);
 
   runApp(MaterialApp(
