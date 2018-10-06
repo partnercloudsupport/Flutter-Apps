@@ -30,6 +30,10 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  // variavel que armazenará os dados das moedas
+  double dolar;
+  double euro;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,9 +81,27 @@ class _HomeState extends State<Home> {
                   ),
                 );
               } else {
-                  return Container(
-                    color: Colors.blueAccent,
-                  );
+                  // atribuindo o valor de compra do dolar e do euro
+                  // formato json
+                  dolar = snapshot.data["results"]["currencies"]["USD"]["buy"];
+                  euro = snapshot.data["results"]["currencies"]["EUR"]["buy"];
+                  // interface do app
+                  return SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                        Icon(Icons.monetization_on, color: Colors.amber, size: 140.0,),
+                        TextField(decoration: InputDecoration(
+                          labelText: "Reais",
+                          prefixText: "R\$",
+                          labelStyle: TextStyle(
+                            color: Colors.amber,
+                            fontSize: 18.0,
+                          ),
+                        border: OutlineInputBorder(),
+                        ),)
+                      ],
+                    ),);
               }
           }
         }
