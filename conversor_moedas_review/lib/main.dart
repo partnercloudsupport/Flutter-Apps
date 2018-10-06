@@ -94,13 +94,49 @@ class _HomeState extends State<Home> {
                   euro = snapshot.data["results"]["currencies"]["EUR"]["buy"];
                   // interface do app
                   return SingleChildScrollView(
+                    padding: EdgeInsets.all(10.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: <Widget>[
                         Icon(Icons.monetization_on, color: Colors.amber, size: 140.0,),
+                        // TextField Reais
                         TextField(decoration: InputDecoration(
                           labelText: "Reais",
                           prefixText: "R\$",
+                          labelStyle: TextStyle(
+                            color: Colors.amber,
+                            fontSize: 18.0,
+                          ),
+                        border: OutlineInputBorder(),
+                          ),
+                        // estilo do texto dentro do TextField
+                        style: TextStyle(
+                          color: Colors.amber,
+                          fontSize: 24.0
+                        ),
+                        ),
+                        // TextField Dolares
+                        Divider(),
+                        TextField(decoration: InputDecoration(
+                          labelText: "Dólares",
+                          prefixText: "US\$",
+                          labelStyle: TextStyle(
+                            color: Colors.amber,
+                            fontSize: 18.0,
+                          ),
+                        border: OutlineInputBorder(),
+                          ),
+                        // estilo do texto dentro do TextField
+                        style: TextStyle(
+                          color: Colors.amber,
+                          fontSize: 24.0
+                        ),
+                        ),
+                        Divider(),
+                        // TextField Euros
+                        TextField(decoration: InputDecoration(
+                          labelText: "Euros",
+                          prefixText: "EUR",
                           labelStyle: TextStyle(
                             color: Colors.amber,
                             fontSize: 18.0,
