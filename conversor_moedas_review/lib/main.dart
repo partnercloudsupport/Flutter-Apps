@@ -9,18 +9,18 @@ import 'dart:convert';
 // link de requisição da api de conversão de moedas
 const request = "https://api.hgbrasil.com/finance/?=format=json&key=60df7606";
 
-  // usamos o await para esperar os dados serem obtidos
-  // para isso nossa função deve ser async!
+// usamos o await para esperar os dados serem obtidos
+// para isso nossa função deve ser async!
 void main() async {
-  runApp(MaterialApp(
-      home: Home(),
-      // tema do app
-      theme: ThemeData(
-        hintColor: Colors.amber,
-        primaryColor: Colors.white,
-      ) 
-  ),
-);
+  runApp(
+    MaterialApp(
+        home: Home(),
+        // tema do app
+        theme: ThemeData(
+          hintColor: Colors.amber,
+          primaryColor: Colors.white,
+        )),
+  );
 }
 
 Future<Map> getData() async {
@@ -30,6 +30,7 @@ Future<Map> getData() async {
   // retornamos o Map
   return json.decode(response.body);
 }
+
 // Widget Stateful
 class Home extends StatefulWidget {
   @override
@@ -44,118 +45,100 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
-      // barra do app
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text("\$ Conversor \$", style: TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 24.0,
-          color: Colors.black
-        ),),
-        backgroundColor: Colors.amber,
-      ),
-      // O FutureBuilder construirá a tela de acordo com o estado do future
-      body: FutureBuilder<Map>(
-        // O dado que será obtido no futuro
-        future: getData(),
-        // 
-        builder: (context, snapshot) {
-          switch(snapshot.connectionState){
-            // ConnectionState.none e .waiting significa quer a conexão não
-            // foi recebida / esperando
-            case ConnectionState.none :
-            case ConnectionState.waiting :
-              return Center(
-                child: Text("Carregando dados...", 
-                  style: TextStyle(
-                    fontSize: 24.0,
-                    color: Colors.amber,
-                    fontWeight: FontWeight.bold
-                  ),
-                ),
-              );
-            default: 
-            // Testa se a conexão teve erro, se tiver aparecer mensagem de erro
-              if (snapshot.hasError) {
-                return Center(
-                  child: Text("Erro ao carregar", 
-                    style: TextStyle(
-                      fontSize: 24.0,
-                      color: Colors.amber,
-                      fontWeight: FontWeight.bold
+        backgroundColor: Colors.black,
+        // barra do app
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text(
+            "\$ Conversor \$",
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 24.0,
+                color: Colors.black),
+          ),
+          backgroundColor: Colors.amber,
+        ),
+        // O FutureBuilder construirá a tela de acordo com o estado do future
+        body: FutureBuilder<Map>(
+            // O dado que será obtido no futuro
+            future: getData(),
+            //
+            builder: (context, snapshot) {
+              switch (snapshot.connectionState) {
+                // ConnectionState.none e .waiting significa quer a conexão não
+                // foi recebida / esperando
+                case ConnectionState.none:
+                case ConnectionState.waiting:
+                  return Center(
+                    child: Text(
+                      "Carregando dados...",
+                      style: TextStyle(
+                          fontSize: 24.0,
+                          color: Colors.amber,
+                          fontWeight: FontWeight.bold),
                     ),
-                  ),
-                );
-              } else {
-                  // atribuindo o valor de compra do dolar e do euro
-                  // formato json
-                  dolar = snapshot.data["results"]["currencies"]["USD"]["buy"];
-                  euro = snapshot.data["results"]["currencies"]["EUR"]["buy"];
-                  // interface do app
-                  return SingleChildScrollView(
-                    padding: EdgeInsets.all(10.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: <Widget>[
-                        Icon(Icons.monetization_on, color: Colors.amber, size: 140.0,),
-                        // TextField Reais
-                        TextField(decoration: InputDecoration(
-                          labelText: "Reais",
-                          prefixText: "R\$",
-                          labelStyle: TextStyle(
-                            color: Colors.amber,
-                            fontSize: 18.0,
-                          ),
-                        border: OutlineInputBorder(),
-                          ),
-                        // estilo do texto dentro do TextField
+                  );
+                default:
+                  // Testa se a conexão teve erro, se tiver aparecer mensagem de erro
+                  if (snapshot.hasError) {
+                    return Center(
+                      child: Text(
+                        "Erro ao carregar",
                         style: TextStyle(
-                          color: Colors.amber,
-                          fontSize: 24.0
-                        ),
-                        ),
-                        // TextField Dolares
-                        Divider(),
-                        TextField(decoration: InputDecoration(
-                          labelText: "Dólares",
-                          prefixText: "US\$",
-                          labelStyle: TextStyle(
+                            fontSize: 24.0,
                             color: Colors.amber,
-                            fontSize: 18.0,
-                          ),
-                        border: OutlineInputBorder(),
-                          ),
-                        // estilo do texto dentro do TextField
-                        style: TextStyle(
-                          color: Colors.amber,
-                          fontSize: 24.0
-                        ),
-                        ),
-                        Divider(),
-                        // TextField Euros
-                        TextField(decoration: InputDecoration(
-                          labelText: "Euros",
-                          prefixText: "EUR",
-                          labelStyle: TextStyle(
+                            fontWeight: FontWeight.bold),
+                      ),
+                    );
+                  } else {
+                    // atribuindo o valor de compra do dolar e do euro
+                    // formato json
+                    dolar = snapshot.data["results"]["currencies"]["USD"]["buy"];
+                    euro = snapshot.data["results"]["currencies"]["EUR"]["buy"];
+                    // interface do app
+                    return SingleChildScrollView(
+                      padding: EdgeInsets.all(10.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: <Widget>[
+                          Icon(
+                            Icons.monetization_on,
                             color: Colors.amber,
-                            fontSize: 18.0,
+                            size: 140.0,
                           ),
-                        border: OutlineInputBorder(),
-                          ),
-                        // estilo do texto dentro do TextField
-                        style: TextStyle(
-                          color: Colors.amber,
-                          fontSize: 24.0
-                        ),
-                        )
-                      ],
-                    ),);
+                          // Criação dos TextFields com o buildTextField
+                          // TextField reais
+                          buildTextField("Reais", "R\$"),
+                          // TextField dolares
+                          Divider(),
+                          buildTextField("Dólares", "R\$"),
+                          // TextField Euros
+                          Divider(),
+                          buildTextField("Euros", "EUR"),
+                        ],
+                      ),
+                    );
+                  }
               }
-          }
-        }
-        )
-    );
+            }));
   }
 }
 
+// funçao que retorna um Widged
+Widget buildTextField(String label, String prefix) {
+  // retornamos o TextField, onde só irá mudar o labelText e o prefixText
+  return TextField(
+    decoration: InputDecoration(
+      // passamos os textos dos parametros para o labelText e prefixText
+      labelText: label,
+      prefixText: prefix,
+      labelStyle: TextStyle(
+        color: Colors.amber,
+        fontSize: 18.0,
+      ),
+      border: OutlineInputBorder(),
+    ),
+    // estilo do texto dentro do TextField
+    style: TextStyle(color: Colors.amber, fontSize: 24.0),
+  );
+}
