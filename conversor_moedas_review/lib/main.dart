@@ -38,10 +38,52 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         centerTitle: true,
         title: Text("\$ Conversor \$", style: TextStyle(
-          fontWeight: FontWeight.bold
+          fontWeight: FontWeight.bold,
+          fontSize: 24.0,
+          color: Colors.black
         ),),
         backgroundColor: Colors.amber,
-      )
+      ),
+      // O FutureBuilder construirá a tela de acordo com o estado do future
+      body: FutureBuilder<Map>(
+        // O dado que será obtido no futuro
+        future: getData(),
+        // 
+        builder: (context, snapshot) {
+          switch(snapshot.connectionState){
+            // ConnectionState.none e .waiting significa quer a conexão não
+            // foi recebida / esperando
+            case ConnectionState.none :
+            case ConnectionState.waiting :
+              return Center(
+                child: Text("Carregando dados...", 
+                  style: TextStyle(
+                    fontSize: 24.0,
+                    color: Colors.amber,
+                    fontWeight: FontWeight.bold
+                  ),
+                ),
+              );
+            default: 
+            // Testa se a conexão teve erro, se tiver aparecer mensagem de erro
+              if (snapshot.hasError) {
+                return Center(
+                  child: Text("Erro ao carregar", 
+                    style: TextStyle(
+                      fontSize: 24.0,
+                      color: Colors.amber,
+                      fontWeight: FontWeight.bold
+                    ),
+                  ),
+                );
+              } else {
+                  return Container(
+                    color: Colors.blueAccent,
+                  );
+              }
+          }
+        }
+        )
     );
   }
 }
