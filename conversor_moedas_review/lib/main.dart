@@ -13,7 +13,14 @@ const request = "https://api.hgbrasil.com/finance/?=format=json&key=60df7606";
   // para isso nossa função deve ser async!
 void main() async {
   runApp(MaterialApp(
-    home: Home()));
+      home: Home(),
+      // tema do app
+      theme: ThemeData(
+        hintColor: Colors.amber,
+        primaryColor: Colors.white,
+      ) 
+  ),
+);
 }
 
 Future<Map> getData() async {
@@ -99,7 +106,13 @@ class _HomeState extends State<Home> {
                             fontSize: 18.0,
                           ),
                         border: OutlineInputBorder(),
-                        ),)
+                          ),
+                        // estilo do texto dentro do TextField
+                        style: TextStyle(
+                          color: Colors.amber,
+                          fontSize: 24.0
+                        ),
+                        )
                       ],
                     ),);
               }
