@@ -13,7 +13,7 @@ const request = "https://api.hgbrasil.com/finance/?=format=json&key=60df7606";
   // para isso nossa função deve ser async!
 void main() async {
   runApp(MaterialApp(
-    home: Container()));
+    home: Home()));
 }
 
 Future<Map> getData() async {
@@ -23,3 +23,26 @@ Future<Map> getData() async {
   // retornamos o Map
   return json.decode(response.body);
 }
+// Widget Stateful
+class Home extends StatefulWidget {
+  @override
+  _HomeState createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      // barra do app
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text("\$ Conversor \$", style: TextStyle(
+          fontWeight: FontWeight.bold
+        ),),
+        backgroundColor: Colors.amber,
+      )
+    );
+  }
+}
+
