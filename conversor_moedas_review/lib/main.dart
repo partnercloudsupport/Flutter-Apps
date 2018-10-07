@@ -41,6 +41,23 @@ class _HomeState extends State<Home> {
   // variavel que armazenará os dados das moedas
   double dolar;
   double euro;
+  // controladores dos TextFields
+  // usamos final pois não irá mudar os textos (Dúvida!)
+  final realController = TextEditingController();
+  final dolarController = TextEditingController();
+  final euroController = TextEditingController();
+  // funções que converterão os valores
+  void _realChanged(String text) {
+    print(text);
+  }
+  
+  void _dolarChanged(String text) {
+    print(text);
+  }
+
+  void _euroChanged(String text) {
+    print(text);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -108,13 +125,13 @@ class _HomeState extends State<Home> {
                           ),
                           // Criação dos TextFields com o buildTextField
                           // TextField reais
-                          buildTextField("Reais", "R\$"),
+                          buildTextField("Reais", "R\$", realController, _realChanged),
                           // TextField dolares
                           Divider(),
-                          buildTextField("Dólares", "R\$"),
+                          buildTextField("Dólares", "R\$", dolarController, _dolarChanged),
                           // TextField Euros
                           Divider(),
-                          buildTextField("Euros", "EUR"),
+                          buildTextField("Euros", "EUR", euroController, _euroChanged),
                         ],
                       ),
                     );
@@ -125,9 +142,11 @@ class _HomeState extends State<Home> {
 }
 
 // funçao que retorna um Widged
-Widget buildTextField(String label, String prefix) {
+Widget buildTextField(String label, String prefix, TextEditingController controller, Function function) {
   // retornamos o TextField, onde só irá mudar o labelText e o prefixText
   return TextField(
+    // instanciamos o controlador passado no parametro
+    controller: controller,
     decoration: InputDecoration(
       // passamos os textos dos parametros para o labelText e prefixText
       labelText: label,
@@ -140,5 +159,7 @@ Widget buildTextField(String label, String prefix) {
     ),
     // estilo do texto dentro do TextField
     style: TextStyle(color: Colors.amber, fontSize: 24.0),
+    // quando o TextField mudar, chamar a função function passada no parametro
+    onChanged: function,
   );
 }
