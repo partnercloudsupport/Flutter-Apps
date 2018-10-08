@@ -43,20 +43,30 @@ class _HomeState extends State<Home> {
   double euro;
   // controladores dos TextFields
   // usamos final pois não irá mudar os textos (Dúvida!)
-  final realController = TextEditingController();
+  TextEditingController realController = TextEditingController();
   final dolarController = TextEditingController();
   final euroController = TextEditingController();
-  // funções que converterão os valores
+  // funções que converterão os valores, o parametro text é o texto que mudou no 
+  // TextField
   void _realChanged(String text) {
-    print(text);
+    // obtendo o valor digitado no campo de reais
+    double real = double.parse(text);
+    // conversão dolar = real / dolar
+    dolarController.text = (real/dolar).toStringAsFixed(2);
+    // conversão euro = real / euro
+    euroController.text = (real/euro).toStringAsFixed(2);
   }
-  
+  // text = o texto modificado no TextField do dolar
   void _dolarChanged(String text) {
-    print(text);
+    double dolar = double.parse(text);
+    realController.text = (this.dolar * dolar).toStringAsFixed(2);
+    euroController.text = ((dolar * this.dolar) / euro).toStringAsFixed(2);
   }
 
   void _euroChanged(String text) {
-    print(text);
+    double euro = double.parse(text);
+    realController.text = (this.euro * euro).toStringAsFixed(2);
+    dolarController.text = ((euro * this.euro) / dolar).toStringAsFixed(2);
   }
 
   @override
@@ -125,13 +135,13 @@ class _HomeState extends State<Home> {
                           ),
                           // Criação dos TextFields com o buildTextField
                           // TextField reais
-                          buildTextField("Reais", "R\$", realController, _realChanged),
+                          buildTextField("Reais", "R\$ ", realController, _realChanged),
                           // TextField dolares
                           Divider(),
-                          buildTextField("Dólares", "R\$", dolarController, _dolarChanged),
+                          buildTextField("Dólares", "US\$ ", dolarController, _dolarChanged),
                           // TextField Euros
                           Divider(),
-                          buildTextField("Euros", "EUR", euroController, _euroChanged),
+                          buildTextField("Euros", "EUR ", euroController, _euroChanged),
                         ],
                       ),
                     );
@@ -145,6 +155,7 @@ class _HomeState extends State<Home> {
 Widget buildTextField(String label, String prefix, TextEditingController controller, Function function) {
   // retornamos o TextField, onde só irá mudar o labelText e o prefixText
   return TextField(
+    keyboardType: TextInputType.number,
     // instanciamos o controlador passado no parametro
     controller: controller,
     decoration: InputDecoration(
