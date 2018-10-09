@@ -158,14 +158,31 @@ class _HomeState extends State<Home> {
         },
       ),
       onDismissed:(direction){
-        lastRemoved = Map.from(_toDoList[index]);
-        lastRemovedPosition = index;
-        _toDoList.removeAt(index); // removemos o elemento corrente
-
         setState(() {
+          lastRemoved = Map.from(_toDoList[index]);
+          lastRemovedPosition = index;
+          _toDoList.removeAt(index); // removemos o elemento corrente
+
           saveData(); // salvamos
+
+          final snack = SnackBar(
+            content: Text("Tarefa \"${lastRemoved["title"]}\" foi removida!"),
+            action: SnackBarAction(
+                label: "Desfazer",
+                // insere o ultimo elemento excluido pra posição excluida
+                onPressed: () {
+                  setState(() {
+                    _toDoList.insert(lastRemovedPosition, lastRemoved);
+                    saveData();
+                  });
+                }
+            ),
+            //duração do snack bar
+            duration: Duration(seconds: 2),
+          );
+          Scaffold.of(context).showSnackBar(snack);
         });
-      },
+      }
     );
   }
 }
