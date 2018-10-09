@@ -17,6 +17,17 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
 
+  // ler os dados sempre que o app iniciar
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      readData().then((data){
+      _toDoList = json.decode(data);
+      });   
+    });
+  }
+
   @override
   // Lista que terá as atividades
   List _toDoList = [];
@@ -30,6 +41,7 @@ class _HomeState extends State<Home> {
       dataController.text = ""; // limpamos TextField
       newToDo["ok"] = false; // como estamos criando a atividade, o estado ok dela é false
       _toDoList.add(newToDo); // adicionamos o map a lista toDoList
+      saveData();
     });
   }
 
@@ -110,6 +122,7 @@ class _HomeState extends State<Home> {
                       onChanged: (c){ // o parametro c é o estado do checkBox (true or false)
                         setState(() {
                           _toDoList[index]["ok"] = c; // passamos o estado para o campo "ok" da lista
+                          saveData(); // salva os dados
                        });
                       }, 
                     );
