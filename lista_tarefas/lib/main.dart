@@ -19,36 +19,42 @@ class _HomeState extends State<Home> {
 
   @override
   // Lista que terá as atividades
-  List _toDoList = ["Thiago", "Gabriel"];
-  // Função que irá retornar o arquivo
+  List _toDoList = [];
+  final dataController = TextEditingController();
+
+  // Essa função irá adicionar a atividade a lista _toDoList
+  void addToDo() {
+    setState(() {
+      Map<String, dynamic> newToDo = Map(); // instanciamos um map vazio
+      newToDo["title"] = dataController.text; // pegamos o texto do TextField e armazenamos num map
+      dataController.text = ""; // limpamos TextField
+      newToDo["ok"] = false; // como estamos criando a atividade, o estado ok dela é false
+      _toDoList.add(newToDo); // adicionamos o map a lista toDoList
+    });
+  }
+
   Future<File> getFile() async {
   // obtém o diretório do app, como o endereço não é retornado na hora
   // usamos o await
     final directory = await getApplicationDocumentsDirectory();
-  // retorna o arquivo data.json no diretório directory
-    return File("${directory.path}/data.json");
+    return File("${directory.path}/data.json"); // retorna o arquivo data.json no diretório directory
   }
   // salva os dados
   Future<File> saveData() async {
-    // converte a list para json
-    String data = json.encode(_toDoList);
-    // o arquivo file recebe o arquivo
-    final file = await getFile();
-    // escrevemos os dados (data) no arquivo (file)
-    return file.writeAsString(data);
+    String data = json.encode(_toDoList); // converte a list para json
+    final file = await getFile(); // o arquivo file recebe o arquivo
+    return file.writeAsString(data); // escrevemos os dados (data) no arquivo (file)
   }
   // Lê os dados
   Future<String> readData() async {
     try {
-      // Óbtem o arquivo
-      final file = await getFile();
-      // lê o arquivo
-      return file.readAsString();
+      final file = await getFile();  // Óbtem o arquivo
+      return file.readAsString(); // lê o arquivo
     } catch(e) {
       return null;
     }
   }
-    // interface do app
+    // interface do appx
     Widget build(BuildContext context) {
       return Scaffold(
         appBar: AppBar(
@@ -66,6 +72,7 @@ class _HomeState extends State<Home> {
                 children: <Widget>[
                   Expanded(
                     child: TextField(
+                        controller: dataController,
                         decoration: InputDecoration(
                             labelText: "Nova Tarefa",
                             labelStyle: TextStyle(
@@ -77,30 +84,34 @@ class _HomeState extends State<Home> {
                   RaisedButton(
                       color: Colors.blueAccent,
                       child: Text("ADD"),
-                      onPressed: () {}
+                      onPressed: addToDo // chama a função de add tarefa
                   ),
                 ],
               ),
             ),
             // Widget que especificará o tamanho da ListView (Dúvida!)
             Expanded(
-              // construtor da ListView
-              child: ListView.builder(
+              child: ListView.builder(                   // construtor da ListView
                 padding: EdgeInsets.only(top: 10.0),
-                // quantos itens terá no ListView
-                itemCount: _toDoList.length,
+                itemCount: _toDoList.length,            // quantos itens terá no ListView
                 // index é o indice do elemento da lista que ele está desenhando no momento
                 itemBuilder: (context, index){
                   return CheckboxListTile(
-                    // O valor virá do map
-                    value: _toDoList[index]["ok"],
+                    value: _toDoList[index]["ok"],  // O valor virá do map
                     // o titulo do ListTile será o texto na posição index do _toDoList
-                    title: Text(_toDoList[index]),
-                    secondary: CircleAvatar(
+                    title: Text(_toDoList[index]["title"]),
+                    secondary: 
+                      CircleAvatar(
                       // Se toDoList[index]["ok"] for true, usamos o icon check se for
-                      // false usamos o icon de errro
                       child: Icon(_toDoList[index]["ok"] ? Icons.check
-                      : Icons.error),),
+                      : Icons.error), // false usamos o icon de errro
+                      ),
+                      // chama uma função quando o estado do checkbox é alterado
+                      onChanged: (c){ // o parametro c é o estado do checkBox (true or false)
+                        setState(() {
+                          _toDoList[index]["ok"] = c; // passamos o estado para o campo "ok" da lista
+                       });
+                      }, 
                     );
                 }),
             )
