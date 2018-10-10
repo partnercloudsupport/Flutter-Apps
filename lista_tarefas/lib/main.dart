@@ -186,15 +186,12 @@ class _HomeState extends State<Home> {
         },
       ),
       onDismissed:(direction){
-        lastRemoved = Map.from(_toDoList[index]);
-        lastRemovedPosition = index;
-        _toDoList.removeAt(index); // removemos o elemento corrente
-         setState(() {
+          setState(() {
           lastRemoved = Map.from(_toDoList[index]);
           lastRemovedPosition = index;
           _toDoList.removeAt(index); // removemos o elemento corrente
            saveData(); // salvamos
-           
+
            final snack = SnackBar(
             content: Text("Tarefa \"${lastRemoved["title"]}\" foi removida!"),
             action: SnackBarAction(
