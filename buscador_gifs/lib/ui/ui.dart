@@ -65,9 +65,50 @@ class _HomePageState extends State<HomePage> {
             ),
             textAlign: TextAlign.center,
           ),
-        )
-      ]
-    ),
+        ),
+        Expanded(
+          child: FutureBuilder(
+            // passamos o futuro desse builder, ou seja, o comportamento do builder será baseado
+            // no estado do _getGifs
+            future: _getGifs(), 
+            builder: (context, snapshot) {
+              switch(snapshot.connectionState) {
+                case ConnectionState.waiting:
+                case ConnectionState.none:
+                  return Container(
+                    alignment: Alignment.center,
+                    height: 200.0,
+                    width: 200.0,
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color> (Colors.white),
+                      strokeWidth: 5.0,
+                    ),
+                  );
+                default:
+                  if(snapshot.hasError) return Container(); //
+                  else _createGifTable(context, snapshot);
+                }
+              }
+            ),
+          )
+        ],
+      ),
     );
   }
+   Widget _createGifTable(BuildContext context, AsyncSnapshot snapshot) {
+      return GridView.builder(
+        padding: EdgeInsets.all(10.0),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2, // numero de elementos na horizontal
+          crossAxisSpacing: 10.0, // espaçamento na horizontal
+          mainAxisSpacing: 10.0, // espaçamento na vertical
+        ),
+        itemCount: 4, // numero de itens no GridView
+        itemBuilder: (context, index) {
+          return GestureDetector( // Usamos para podermos clickarmos na imagem (?)
+            child: Image.network(""),
+          );
+        },
+      );
+    }
 }
