@@ -90,17 +90,18 @@ class _HomeState extends State<Home> {
                 ],
               ),
             ),
-            RefreshIndicator(
-              // Widget que especificará o tamanho da ListView (Dúvida!)
-              child:Expanded(
+            // Widget que especificará o tamanho da ListView (Dúvida!)
+            Expanded(
+              child: RefreshIndicator(
                 child: ListView.builder(
-              // construtor da ListView
-              padding: EdgeInsets.only(top: 10.0),
-              itemCount: _toDoList.length, // quantos itens terá no ListView
-              // index é o indice do elemento da lista que ele está desenhando no momento
-              itemBuilder: buildItem,
-            )),
-            onRefresh: _refresh,
+                // construtor da ListView
+                padding: EdgeInsets.only(top: 10.0),
+                itemCount: _toDoList.length, // quantos itens terá no ListView
+                // index é o indice do elemento da lista que ele está desenhando no momento
+                itemBuilder: buildItem,
+                ),
+                onRefresh: _refresh,
+              ),
             )
           ],
         ));
