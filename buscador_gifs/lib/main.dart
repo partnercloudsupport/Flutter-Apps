@@ -6,5 +6,7 @@ import 'package:buscador_gifs/ui/ui.dart';
 void main() {
   runApp(MaterialApp(
     home: HomePage(),
+    theme: ThemeData(
+      hintColor: Colors.white,),
   ));
 }

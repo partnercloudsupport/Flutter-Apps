@@ -12,8 +12,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
-  String _search;
-  int _offset;
+  String _search; // texto de pesquisa
+  int _offset; // offset
 
   // função que obterá os Gifs da internet
   Future<Map>_getGifs() async {
@@ -40,7 +40,34 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Scaffold(
+      backgroundColor: Colors.black,
+      // A barra será um gif
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        title: Image.network("https://developers.giphy.com/static/img/dev-logo-lg.7404c00322a8.gif"), // O title recebe um Widget. Passamos a img
+        centerTitle: true,
+      ),
+    body: Column(
+      children:[
+        Padding(
+          padding: EdgeInsets.all(10.0),
+          child: TextField(
+            decoration: InputDecoration(
+              labelText: "Pesquise aqui!",
+              labelStyle: TextStyle(
+                color: Colors.white),
+              border: OutlineInputBorder()
+            ),
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 18.0,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        )
+      ]
+    ),
     );
   }
 }
