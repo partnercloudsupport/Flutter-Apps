@@ -16,6 +16,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+
   // ler os dados sempre que o app iniciar
   @override
   void initState() {
@@ -50,6 +51,11 @@ class _HomeState extends State<Home> {
   }
 
   @override
+  
+  Map<String, dynamic> lastRemoved = Map();
+  int lastRemovedPosition;
+
+  
   // Lista que terá as atividades
   List _toDoList = [];
   final dataController = TextEditingController();
@@ -149,25 +155,65 @@ class _HomeState extends State<Home> {
 
   // essa função faz os itens do ListView
   Widget buildItem(context, index) {
-    return CheckboxListTile(
-      value: _toDoList[index]["ok"], // O valor virá do map
-      // o titulo do ListTile será o texto na posição index do _toDoList
-      title: Text(_toDoList[index]["title"]),
-      secondary: CircleAvatar(
-        // Se toDoList[index]["ok"] for true, usamos o icon check se for
-        child: Icon(_toDoList[index]["ok"]
-            ? Icons.check
-            : Icons.error), // false usamos o icon de errro
+     
+    return Dismissible(
+       // usamos para diferenciar os elementos da ListView
+       key: Key(DateTime.now().millisecondsSinceEpoch.toString()),
+       direction: DismissDirection.startToEnd,
+       background: Container(
+         color: Colors.red,
+         alignment: Alignment(-0.9, 0.0),
+         child: Icon(Icons.delete, color: Colors.white),
+       ),
+       child: CheckboxListTile(
+         value: _toDoList[index]["ok"],
+         // O valor virá do map
+         // o titulo do ListTile será o texto na posição index do _toDoList
+         title: Text(_toDoList[index]["title"]),
+         secondary: CircleAvatar(
+           // Se toDoList[index]["ok"] for true, usamos o icon check se for
+           child: Icon(_toDoList[index]["ok"]
+               ? Icons.check
+               : Icons.error), // false usamos o icon de errro
+         ),
+         // chama uma função quando o estado do checkbox é alterado
+         onChanged: (c) {
+           // o parametro c é o estado do checkBox (true or false)
+           setState(() {
+             _toDoList[index]["ok"] = c; // passamos o estado para o campo "ok" da lista
+             saveData(); // salva os dados
+           });
+        },
       ),
-      // chama uma função quando o estado do checkbox é alterado
-      onChanged: (c) {
-        // o parametro c é o estado do checkBox (true or false)
-        setState(() {
-          _toDoList[index]["ok"] =
-              c; // passamos o estado para o campo "ok" da lista
-          saveData(); // salva os dados
+      onDismissed:(direction){
+        lastRemoved = Map.from(_toDoList[index]);
+        lastRemovedPosition = index;
+        _toDoList.removeAt(index); // removemos o elemento corrente
+         setState(() {
+          lastRemoved = Map.from(_toDoList[index]);
+          lastRemovedPosition = index;
+          _toDoList.removeAt(index); // removemos o elemento corrente
+           saveData(); // salvamos
+           
+           final snack = SnackBar(
+            content: Text("Tarefa \"${lastRemoved["title"]}\" foi removida!"),
+            action: SnackBarAction(
+                label: "Desfazer",
+                // insere o ultimo elemento excluido pra posição excluida
+                onPressed: () {
+                  setState(() {
+                    _toDoList.insert(lastRemovedPosition, lastRemoved);
+                    saveData();
+                  });
+                }
+            ),
+            //duração do snack bar
+            duration: Duration(seconds: 2),
+           );
+          Scaffold.of(context).showSnackBar(snack);
         });
-      },
-    );
-  }
-}
+      }
+      );
+    }
+   }
+
