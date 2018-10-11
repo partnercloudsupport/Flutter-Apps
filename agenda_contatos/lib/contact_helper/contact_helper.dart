@@ -74,6 +74,30 @@ class ContactHelper {
     return await dbContact.delete(contactTable, where: "$idColumn = ?", whereArgs: [id]);
   }
 
+  // função que atualiza o contato
+  Future<int>updateContact(Contact contact) async {
+    Database dbContact = await db;
+    return await dbContact.update(contactTable, contact.toMap(),
+        where: "$idColumn",
+        whereArgs: [contact.id]);
+  }
+
+  Future<List>getAllContacts() async {
+    Database dbContact = await db;
+    List listMap = await dbContact.rawQuery("SELECT * FROM $contactTable"); // lista de maps
+    List<Contact> listContacts = List(); // lista de contatos
+    for(Map m in listMap){ // para cada m na lista listMap... adicionar ao lista de contatos
+      listContacts.add(Contact.fromMap(m)); // passamos o map e atribuimos os valores
+    }
+    return listContacts;
+  }
+
+  // Função que fecha o banco de dados
+  Future close() async {
+    Database dbContact = await db;
+    dbContact.close();
+  }
+
 }
 
 class Contact {
