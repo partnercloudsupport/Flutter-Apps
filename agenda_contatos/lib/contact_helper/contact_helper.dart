@@ -22,7 +22,7 @@ class ContactHelper {
   Database _db; // só essa classe poderá acessar o banco de dados
 
   get db async {
-    if(_db != null)
+    if(_db != null) // se o db já foi inicializado
       return _db;
     else {
       _db = await initDb();
@@ -42,6 +42,29 @@ class ContactHelper {
       );
     });
     return db;
+  }
+
+  Future<Contact> saveContact(Contact contact) async {
+    Database dbContact = await db; // obter o banco de dados usando o get db
+    contact.id = await dbContact.insert(contactTable, contact.toMap()); // retorna o id da insersão
+    return contact;
+  }
+
+  // O where e whereArgs são as condições para retornar as colunas
+  // o where "$idColum = ?" significa que o argumento ? é o parâmetro passado no whereArgs, no caso o  [id]
+  Future<Contact> getContact(int id) async {
+    Database dbContact = await db; // obter o banco de dados usando o get db
+    List<Map> maps = await dbContact.query(contactTable,
+      columns: [idColumn, nameColumn, phoneColumn, emailColumn, imgColumn],
+      where: "$idColumn = ?",
+      whereArgs: [id]
+    );
+    if(maps.length > 0){ // se há elementos no maps
+      // retornamos o primeiro map encontrado, ou seja, que atendeu aos argumentos do where e whereArgs
+      return Contact.fromMap(maps.first);
+    } else {
+      return null;
+    }
   }
 
 }
