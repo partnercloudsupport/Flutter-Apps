@@ -67,6 +67,13 @@ class ContactHelper {
     }
   }
 
+  // excluiremos o contato com o id passado.
+  // usamos o where e whereArgs para remover o contactTable correto
+  Future<int> deleteContact(int id) async {
+    Database dbContact = await db;
+    return await dbContact.delete(contactTable, where: "$idColumn = ?", whereArgs: [id]);
+  }
+
 }
 
 class Contact {
