@@ -11,25 +11,41 @@ class _HomePageState extends State<HomePage> {
 
   ContactHelper helper = ContactHelper();
 
+  List<Contact> contacts = List();
 
   @override
-  void initState() {
-    super.initState();
+    void initState() {
+      super.initState();
 
-    Contact contact = Contact(); // criamos um objeto contato
-
-    contact.name = "Thiago Souza de Carvalho";
-    contact.phone = "391833";
-    contact.email = "thiago@gmail.com";
-    contact.img = "imgtest";
-
-    helper.saveContact(contact); // salvamos o contato passando os dados para o banco de dados
-    helper.getAllContacts().then((list){
-      print(list);
-    });
-  }
+      helper.getAllContacts().then((list){
+        setState(() {
+          contacts = list;       
+        });  
+      }); 
+    }
 
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text("Contatos"),
+      backgroundColor: Colors.blueAccent,
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        backgroundColor: Colors.blueAccent,
+        onPressed: () {
+          print(contacts.length);
+        }
+      ),
+      body: ListView.builder(
+        padding: EdgeInsets.all(10.0),
+        itemCount: contacts.length,
+        // função que irá criar a lista de widgets que queremos criar
+        itemBuilder: (context, index) {
+          
+        },
+      ),
+    );
   }
 }

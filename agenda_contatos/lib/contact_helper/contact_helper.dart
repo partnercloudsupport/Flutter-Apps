@@ -12,7 +12,7 @@ final String emailColumn = "emailColumn";
 final String imgColumn = "imgColumn";
 
 class ContactHelper {
-
+  
   static final ContactHelper _instance = ContactHelper.internal();
   // retorna uma instância do objeto
   factory ContactHelper() => _instance;
