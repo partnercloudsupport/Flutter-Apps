@@ -1,5 +1,6 @@
 import 'package:agenda_contatos/contact_helper/contact_helper.dart';
 import 'package:flutter/material.dart';
+import 'dart:io';
 
 class HomePage extends StatefulWidget {
   @override
@@ -11,18 +12,9 @@ class _HomePageState extends State<HomePage> {
 
   ContactHelper helper = ContactHelper();
 
-  List<Contact> contacts = List();
+  Contact contact = Contact();
 
-  @override
-    void initState() {
-      super.initState();
-
-      helper.getAllContacts().then((list){
-        setState(() {
-          contacts = list;       
-        });  
-      }); 
-    }
+  List<Contact> contacts = List(); // lista de contatos  
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,9 +35,36 @@ class _HomePageState extends State<HomePage> {
         itemCount: contacts.length,
         // função que irá criar a lista de widgets que queremos criar
         itemBuilder: (context, index) {
-          
+         // _contactCard(context, index);
         },
       ),
     );
   }
+
+  Widget _contactCard(BuildContext context, int index) {
+    return GestureDetector( 
+      child: Card(
+        child: Padding(
+          padding: EdgeInsets.all(10.0),
+          child: Row(
+            children: <Widget> [
+              Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  image: DecorationImage(
+                    image: contacts[index].img != null ?
+                      FileImage(File(contacts[index].img)) :
+                        AssetImage("images/contact_images");
+                  )
+                ),
+                height: 80.0,
+                width: 80.0,
+              )
+            ]
+          ),
+        )
+      ),
+    );
+  }
+  
 }
