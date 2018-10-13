@@ -12,7 +12,7 @@ final String emailColumn = "emailColumn";
 final String imgColumn = "imgColumn";
 
 class ContactHelper {
-  
+
   static final ContactHelper _instance = ContactHelper.internal();
   // retorna uma instância do objeto
   factory ContactHelper() => _instance;
@@ -32,7 +32,7 @@ class ContactHelper {
   // função que inicializa o banco de dados
   Future<Database> initDb() async {
     final dataBasePath = await getDatabasesPath();
-    final path = join(dataBasePath, "contacts1.db"); // caminho do arquivo do banco de dados
+    final path = join(dataBasePath, "contacts_data.db"); // caminho do arquivo do banco de dados
     // retornamos db que é um Database
     return await openDatabase(path, version: 1, onCreate: (Database db, int newerVersion) async {
         await db.execute(

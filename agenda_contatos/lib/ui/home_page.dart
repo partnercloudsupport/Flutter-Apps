@@ -10,11 +10,27 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
 
+  @override
+  void initState() {
+    super.initState();
+    
+    contact.name = "thiago";
+    contact.email = "tsc0877@gmail.com";
+    contact.phone = "88988722564";
+    contact.img = "imgTest";
+
+    helper.saveContact(contact);
+    
+    helper.getAllContacts().then((list){
+      setState(() {
+        contacts = list;
+      });
+    });
+  }
+
   ContactHelper helper = ContactHelper();
-
   Contact contact = Contact();
-
-  List<Contact> contacts = List(); // lista de contatos  
+  List<Contact> contacts = List(); // lista de contatos  contact
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,7 +43,7 @@ class _HomePageState extends State<HomePage> {
         child: Icon(Icons.add),
         backgroundColor: Colors.blueAccent,
         onPressed: () {
-          print(contacts.length);
+          debugPrint(contacts.length.toString());
         }
       ),
       body: ListView.builder(
@@ -35,7 +51,7 @@ class _HomePageState extends State<HomePage> {
         itemCount: contacts.length,
         // função que irá criar a lista de widgets que queremos criar
         itemBuilder: (context, index) {
-         // _contactCard(context, index);
+          return _contactCard(context, index);
         },
       ),
     );
@@ -49,16 +65,36 @@ class _HomePageState extends State<HomePage> {
           child: Row(
             children: <Widget> [
               Container(
+                height: 80.0,
+                width: 80.0,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   image: DecorationImage(
+                    // caso a imagem do contato não seja null, ?, pegaremos o arquivo de imagem
+                    // caso seja null, : , usamos uma imagem padrão
                     image: contacts[index].img != null ?
                       FileImage(File(contacts[index].img)) :
-                        AssetImage("images/contact_images");
+                        AssetImage("images/contact_image.png")
                   )
                 ),
-                height: 80.0,
-                width: 80.0,
+              ),
+              Padding(padding: EdgeInsets.only(left: 10.0),
+                child: Column(
+                  //crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(contacts[index].name ?? "", 
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20.0),
+                      ),
+                      Text(contacts[index].email ?? "", 
+                      style: TextStyle( fontSize: 18.0),
+                      ),
+                      Text(contacts[index].phone ?? "", 
+                      style: TextStyle( fontSize: 18.0),
+                      )
+                  ],
+                ),
               )
             ]
           ),
