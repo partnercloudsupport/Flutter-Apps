@@ -17,7 +17,7 @@ class _HomePageState extends State<HomePage> {
     contact.name = "thiago";
     contact.email = "tsc0877@gmail.com";
     contact.phone = "88988722564";
-    contact.img = "imgTest";
+    //contact.img = "imgTest";
 
     helper.saveContact(contact);
     
@@ -82,6 +82,8 @@ class _HomePageState extends State<HomePage> {
                 child: Column(
                   //crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
+                    // o ?? "" significa: se for nulo, atribuir "" (um texto vazio) 
+                    // para não dar erro
                     Text(contacts[index].name ?? "", 
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
