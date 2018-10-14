@@ -11,6 +11,10 @@ class ContactPage extends StatefulWidget {
 }
 
 class _ContactPageState extends State<ContactPage> {
+
+  final _emailController = TextEditingController();
+  final _nameController = TextEditingController();
+  final _phoneController = TextEditingController();
   
   bool _userEdited = false;  // indica se o usuário editou o contato
 
@@ -25,6 +29,10 @@ class _ContactPageState extends State<ContactPage> {
       // passamos os dados de um contato para o _editedContact
       // pegamos o map e fazemos um novo contato através desse mapa
       _editedContact = Contact.fromMap(widget.contact.toMap());
+      // se não for um contato vazio, atualizar os controladores
+      _nameController.text = _editedContact.name;
+      _emailController.text = _editedContact.email;
+      _phoneController.text = _editedContact.phone;
     }
   }
   
@@ -60,15 +68,36 @@ class _ContactPageState extends State<ContactPage> {
                 ),
               ),
               TextField(
+                controller: _nameController,
                 decoration: InputDecoration(
                   labelText: "Nome"),
                   onChanged: (text) {
-                    _userEdited = true;
+                    _userEdited = true; // indica que o contato foi editado
                     setState(() {
-                      _editedContact.name = text;
+                      _editedContact.name = text; // atualiza o contato com o texto do TextField 
                     });
                   },
-              )
+              ),
+              TextField(
+                controller: _emailController,
+                keyboardType: TextInputType.emailAddress,
+                decoration: InputDecoration(
+                  labelText: "Email"),
+                  onChanged: (text) {
+                    _userEdited = true; // indica que o contato foi editado
+                    _editedContact.email = text; // atualiza o contato com o texto do TextField 
+                  },
+              ),
+              TextField(
+                controller: _phoneController,
+                keyboardType: TextInputType.phone,
+                decoration: InputDecoration(
+                  labelText: "Phone"),
+                  onChanged: (text) {
+                    _userEdited = true; // indica que o contato foi editado
+                    _editedContact.phone = text; // atualiza o contato com o texto do TextField 
+                  },
+              ),
             ],
           )
         ),

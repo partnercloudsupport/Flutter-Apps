@@ -1,6 +1,7 @@
 import 'package:agenda_contatos/contact_helper/contact_helper.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
+import 'contact_page.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -20,12 +21,7 @@ class _HomePageState extends State<HomePage> {
     //contact.img = "imgTest";
 
     helper.saveContact(contact);
-    
-    helper.getAllContacts().then((list){
-      setState(() {
-        contacts = list;
-      });
-    });
+    _getAllContacts();
   }
 
   ContactHelper helper = ContactHelper();
@@ -43,7 +39,7 @@ class _HomePageState extends State<HomePage> {
         child: Icon(Icons.add),
         backgroundColor: Colors.blueAccent,
         onPressed: () {
-          debugPrint(contacts.length.toString());
+          _showContactPage();
         }
       ),
       body: ListView.builder(
@@ -102,7 +98,36 @@ class _HomePageState extends State<HomePage> {
           ),
         )
       ),
+      onTap: () {
+        _showContactPage(contact: contacts[index]);
+      },
     );
   }
   
+  // função que chamará a tela de contatos
+  // o parâmetro é opcional
+  void _showContactPage({Contact contact}) async {
+    final recContact = await Navigator.push(context, 
+      MaterialPageRoute(builder: (context) => ContactPage(contact: contact,)
+      )
+    );
+    if(recContact != null){
+      if(contact != null){ // ou seja, o contato já existe e vamos atualiza-lo
+        helper.updateContact(contact);
+      } else { // ou seja, estamos criando um contato
+        helper.saveContact(contact);
+      } 
+      _getAllContacts();
+    }
+  }
+
+// função que atualiza todos os contatos
+void _getAllContacts() {
+  helper.getAllContacts().then((list){
+      setState(() {
+        contacts = list;
+      });
+  });
+}
+
 }
