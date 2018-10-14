@@ -2,7 +2,7 @@ import 'package:agenda_contatos/contact_helper/contact_helper.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'contact_page.dart';
-
+import 'package:url_launcher/url_launcher.dart';
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
@@ -14,7 +14,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    
+
     helper.saveContact(contact);
     _getAllContacts();
   }
@@ -29,6 +29,21 @@ class _HomePageState extends State<HomePage> {
         centerTitle: true,
         title: Text("Contatos"),
       backgroundColor: Colors.blueAccent,
+      actions: <Widget>[
+             PopupMenuButton<OrderOptions>(
+               itemBuilder: (context) => <PopupMenuEntry<OrderOptions>>[
+                const PopupMenuItem<OrderOptions>(
+                  child: Text("Ordenar A-Z"),
+                  value: OrderOptions.orderaz,
+                  ),
+                  const PopupMenuItem<OrderOptions>(
+                  child: Text("Ordenar Z-A"),
+                  value: OrderOptions.orderza,
+                  ),
+               ],
+               onSelected: _orderList,
+             )
+           ],
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
@@ -141,7 +156,10 @@ void _showOptions(BuildContext context, int index) {
                 Padding(
                   padding: EdgeInsets.all(10.0),
                   child: FlatButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      launch("tel: ${contacts[index].phone}");
+                      Navigator.pop(context);
+                    },
                     child: Text("Ligar", 
                       style: TextStyle(fontSize: 18.0, color: Colors.blueAccent),
                     )
@@ -182,5 +200,23 @@ void _showOptions(BuildContext context, int index) {
     }
   );
 }
+
+void _orderList(OrderOptions result) {
+    switch(result) {
+      case OrderOptions.orderaz:
+        contacts.sort((a, b){
+          return a.name.toLowerCase().compareTo(b.name.toLowerCase());
+        });
+      break;
+      case OrderOptions.orderza:
+        contacts.sort((a,b){
+          return b.name.toLowerCase().compareTo(a.name.toLowerCase());
+        });
+      break;
+    }
+    setState(() {
+          
+    });
+  }
 
 }

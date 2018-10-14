@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:agenda_contatos/contact_helper/contact_helper.dart';
 import 'dart:io';
 import 'dart:async';
+import 'package:image_picker/image_picker.dart';
+
+// enum é um conjunto de valores constantes
+enum OrderOptions {orderaz, orderza}
 
 class ContactPage extends StatefulWidget {
 
@@ -64,7 +68,16 @@ class _ContactPageState extends State<ContactPage> {
         body: SingleChildScrollView(
           padding: EdgeInsets.all(10.0),
           child: Column(children: <Widget>[
-              Container(
+            GestureDetector(
+              onTap: () {
+                ImagePicker.pickImage(source: ImageSource.camera).then((file){
+                  if(file == null) return;
+                  setState(() {
+                    _editedContact.img = file.path;                
+                  });
+                });
+              },
+              child: Container(
                 height: 140.0,
                 width: 140.0,
                 decoration: BoxDecoration(
@@ -78,6 +91,7 @@ class _ContactPageState extends State<ContactPage> {
                   )
                 ),
               ),
+            ),
               TextField(
                 controller: _nameController,
                 focusNode: _nameFocus,
