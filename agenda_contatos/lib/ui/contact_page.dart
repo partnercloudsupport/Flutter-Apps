@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:agenda_contatos/contact_helper/contact_helper.dart';
 import 'dart:io';
+import 'dart:async';
 
 class ContactPage extends StatefulWidget {
 
@@ -15,6 +16,8 @@ class _ContactPageState extends State<ContactPage> {
   final _emailController = TextEditingController();
   final _nameController = TextEditingController();
   final _phoneController = TextEditingController();
+
+  final _nameFocus = FocusNode();
   
   bool _userEdited = false;  // indica se o usuário editou o contato
 
@@ -38,14 +41,22 @@ class _ContactPageState extends State<ContactPage> {
   
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return WillPopScope(
+      onWillPop: _requestPop,
+      child: Scaffold(
         appBar: AppBar(
            centerTitle: true,
            backgroundColor: Colors.blueAccent,
            title: Text(_editedContact.name ?? "Novo Contato"),
         ),
           floatingActionButton: FloatingActionButton(
-            onPressed: (){},
+            onPressed: (){
+              if(_editedContact.name != null && _editedContact.name.isNotEmpty){
+                Navigator.pop(context, _editedContact);
+              } else{
+                FocusScope.of(context).requestFocus(_nameFocus);
+              }
+            },
             child: Icon(Icons.save,
             ),
           backgroundColor: Colors.blueAccent,
@@ -69,10 +80,10 @@ class _ContactPageState extends State<ContactPage> {
               ),
               TextField(
                 controller: _nameController,
+                focusNode: _nameFocus,
                 decoration: InputDecoration(
                   labelText: "Nome"),
                   onChanged: (text) {
-                    _userEdited = true; // indica que o contato foi editado
                     setState(() {
                       _editedContact.name = text; // atualiza o contato com o texto do TextField 
                     });
@@ -101,6 +112,40 @@ class _ContactPageState extends State<ContactPage> {
             ],
           )
         ),
+      )
     );
+  }
+
+  // função que será chamada ao apertar o botão de voltar 
+  Future<bool>_requestPop() {
+    if(_userEdited){
+      showDialog(
+        context: context, 
+        builder: (context){
+          return AlertDialog(
+            title: Text("Descartar alterações?"),
+            content: Text("Se sair as alterações serão perdidas."),
+            actions: <Widget>[
+              FlatButton(
+                child: Text("Cancelar"),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              FlatButton(
+                child: Text("Sim"),
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                },
+              )
+            ],
+          );
+        });
+        return Future.value(false); // não permite sair automaticamente da tela
+    } else {
+        return Future.value(true); // permite sair automaticamente da tela
+    }
+    
   }
 }

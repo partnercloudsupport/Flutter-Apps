@@ -113,9 +113,9 @@ class _HomePageState extends State<HomePage> {
     );
     if(recContact != null){
       if(contact != null){ // ou seja, o contato já existe e vamos atualiza-lo
-        helper.updateContact(contact);
+        helper.updateContact(recContact);
       } else { // ou seja, estamos criando um contato
-        helper.saveContact(contact);
+        helper.saveContact(recContact);
       } 
       _getAllContacts();
     }
