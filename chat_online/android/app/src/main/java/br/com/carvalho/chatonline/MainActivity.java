@@ -1,4 +1,4 @@
-package com.example.chatonline;
+package br.com.carvalho.chatonline;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;

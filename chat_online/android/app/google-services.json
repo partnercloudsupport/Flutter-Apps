@@ -8,18 +8,18 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:294979706549:android:b9f687ff255f9c7c",
+        "mobilesdk_app_id": "1:294979706549:android:62b3ba78e66b86f5",
         "android_client_info": {
-          "package_name": "com.example.chatonline"
+          "package_name": "br.com.carvalho.chatonline"
         }
       },
       "oauth_client": [
         {
-          "client_id": "294979706549-6o8cdbq2p31ek6ijnpctb2dj09j4o86c.apps.googleusercontent.com",
+          "client_id": "294979706549-jmkjq2p3je9kfvh7ksadqjar7vms5otd.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.chatonline",
-            "certificate_hash": "4fe0437635bd672df64b66658d275357c2a53115"
+            "package_name": "br.com.carvalho.chatonline",
+            "certificate_hash": "76156f99cd5343e84aa1bfc31412010c0cd4318c"
           }
         },
         {
