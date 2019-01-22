@@ -1,6 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'dart:async';
+
 
 Future main() async {
   // exemplo de leitura de todos os arquivos da coleção usuarios
@@ -33,6 +37,26 @@ final ThemeData kIOSTheme = ThemeData(
 
 final ThemeData kDefaultTheme = ThemeData(
     primarySwatch: Colors.purple, accentColor: Colors.orangeAccent[400]);
+
+final googleSingIn = GoogleSignIn();
+final auth = FirebaseAuth.instance; // colocamos no auth para simplificar, mas é uma única instancia t odo o app
+
+Future<Null> _ensureLoggedIn() async { // função para sabermos se o usuario esta logado
+  GoogleSignInAccount user = googleSingIn.currentUser; // estamos pegando o usuario atual
+  if(user == null)
+    user = await googleSingIn.signInSilently(); // logar silenciosamente no app
+
+  if(user == null)
+    user = await googleSingIn.signIn();
+
+  if(await auth.currentUser() == null) { // logar no firebase
+    GoogleSignInAuthentication credentials = await googleSingIn.currentUser
+        .authentication;
+    await auth.signInWithGoogle(
+        idToken: credentials.idToken,
+        accessToken: credentials.accessToken);
+  }
+}
 
 class MyApp extends StatelessWidget {
   @override
