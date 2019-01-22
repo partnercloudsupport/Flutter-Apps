@@ -1,10 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'dart:async';
-
+import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 Future main() async {
   // exemplo de leitura de todos os arquivos da coleção usuarios
@@ -48,23 +51,21 @@ Future<Null> _ensureLoggedIn() async { // função para sabermos se o usuario es
 
   if(user == null)
     user = await googleSingIn.signIn();
-
-  /*
+/*
   if(await auth.currentUser() == null) { // logar no firebase
     GoogleSignInAuthentication credentials = await googleSingIn.currentUser.authentication;
     await auth.signInWithGoogle(
         idToken: credentials.idToken,
         accessToken: credentials.accessToken);
-  }
-  */
+  }*/
 }
 
-_handleSubmitted(String text) async {
+Future<Null> _handleSubmitted(String text) async {
   await _ensureLoggedIn(); // verifica se o usuário está logado
   _sendMessage(text: text); // envia a mensagem para o banco de dados firebase
 }
 
-void _sendMessage({String text, String imgUrl}) { // metodo que envia a mensagem para o firebase
+_sendMessage({String text, String imgUrl}) { // metodo que envia a mensagem para o firebase
   Firestore.instance.collection("messages").add(
     {
       "text" : text,
@@ -96,6 +97,7 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -111,10 +113,26 @@ class _ChatScreenState extends State<ChatScreen> {
         body: Column(
           children: <Widget>[
             Expanded( // Usei o Expanded para ocupar to;do o espaço possivel na tela
-              child: ListView( // ListView para ter a lista das mensagens com o ChatMessage
-                children: <Widget>[
-                  ChatMessage(),
-                ],
+              child: StreamBuilder(
+                stream: Firestore.instance.collection("messages").snapshots(), // observa se atualiza os dados
+                builder: (context, snapshot) {
+                    switch(snapshot.connectionState){
+                      case ConnectionState.none:
+                      case ConnectionState.waiting:
+                        return Center( // widget de carregamento
+                          child: CircularProgressIndicator(),
+                        );
+                      default:
+                        return ListView.builder(
+                            reverse: true,
+                            itemCount: snapshot.data.documents.length,
+                            itemBuilder: (context, index) {
+                              List r = snapshot.data.documents.reversed.toList(); // metodo para reverter a lista
+                              return ChatMessage(r[index].data);
+                            }
+                        );
+                    }
+                }
               ),
             ),
             Divider(
@@ -133,6 +151,8 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 }
 
+final _textController = TextEditingController();
+
 class TextComposer extends StatefulWidget {
   @override
   _TextComposerState createState() => _TextComposerState();
@@ -140,7 +160,12 @@ class TextComposer extends StatefulWidget {
 
 class _TextComposerState extends State<TextComposer> {
 
-  final _textController = TextEditingController();
+  void _reset() {
+    setState(() {
+      _textController.clear();
+      _isComposing = false;
+    });
+  }
 
   bool _isComposing =
       false; // bool que controla o estado do botão de enviar mensagem
@@ -163,14 +188,30 @@ class _TextComposerState extends State<TextComposer> {
             // icone da camera
             Container(
               child:
-                  IconButton(icon: Icon(Icons.photo_camera), onPressed: () {}),
+                  IconButton(icon: Icon(Icons.photo_camera),
+                      onPressed: () async {
+
+                        await _ensureLoggedIn();
+                        File imgFile = await ImagePicker.pickImage(source: ImageSource.camera);
+                        if(imgFile == null) return;
+                        StorageUploadTask uploadTask = FirebaseStorage.instance.ref().child(
+                            googleSingIn.currentUser.id.toString() + DateTime.now().millisecondsSinceEpoch.toString()
+                        ).putFile(imgFile);
+
+                        uploadTask.onComplete.then((returnTask){
+                          returnTask.ref.getDownloadURL().then((url){
+                            _sendMessage(imgUrl: url);
+                          });
+                        });
+                      }),
             ),
             // Campo de texto para o usuário mandar mensagem
             Expanded(
               child: TextField(
                 controller: _textController,
                 onSubmitted: (text) { // função do botão de enviar do teclado
-                  _handleSubmitted(text); // chamamos _handleSubmitted para enviar mensagem
+                  _handleSubmitted(text);// chamamos _handleSubmitted para enviar mensagem
+                  _reset();
                 },
                 decoration:
                     InputDecoration.collapsed(hintText: "Enviar uma mensagem"),
@@ -190,6 +231,7 @@ class _TextComposerState extends State<TextComposer> {
                         onPressed: _isComposing
                             ? () {
                           _handleSubmitted(_textController.text);
+                          _reset();
                         }
                             : null // A ação só irá acontecer caso o usuario esteja digitando algo
                         )
@@ -198,6 +240,7 @@ class _TextComposerState extends State<TextComposer> {
                         onPressed: _isComposing
                             ? () {
                           _handleSubmitted(_textController.text);
+                          _reset();
                         }
                             : null // A ação só irá acontecer caso o usuario esteja digitando algo
                         ))
@@ -209,6 +252,11 @@ class _TextComposerState extends State<TextComposer> {
 }
 
 class ChatMessage extends StatelessWidget {
+
+  final Map<String, dynamic> data;
+
+  ChatMessage(this.data);
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -218,7 +266,7 @@ class ChatMessage extends StatelessWidget {
           Container(
             margin: const EdgeInsets.only(right: 16.0),
             child: CircleAvatar(
-              backgroundImage: NetworkImage("https://static7.depositphotos.com/1004841/738/i/450/depositphotos_7381892-stock-photo-flag-of-brazil.jpg"),
+              backgroundImage: NetworkImage(data["senderPhotoUrl"]),
             ),
           ),
           Expanded(
@@ -226,15 +274,18 @@ class ChatMessage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  "Thiago",
+                  data["senderName"],
                   style: Theme.of(context).textTheme.subhead,
                 ),
                 Container(
                   margin: EdgeInsets.only(top: 5.0),
-                  child: Text(
-                    "teste"
+                  child: data["imgUrl"] != null ?
+                      Image.network(data["imgUrl"], width: 150.0,
+                      )
+                      : Text(
+                        data["text"]
+                      ),
                   ),
-                )
               ],
             )
           )
