@@ -49,13 +49,30 @@ Future<Null> _ensureLoggedIn() async { // função para sabermos se o usuario es
   if(user == null)
     user = await googleSingIn.signIn();
 
+  /*
   if(await auth.currentUser() == null) { // logar no firebase
-    GoogleSignInAuthentication credentials = await googleSingIn.currentUser
-        .authentication;
+    GoogleSignInAuthentication credentials = await googleSingIn.currentUser.authentication;
     await auth.signInWithGoogle(
         idToken: credentials.idToken,
         accessToken: credentials.accessToken);
   }
+  */
+}
+
+_handleSubmitted(String text) async {
+  await _ensureLoggedIn(); // verifica se o usuário está logado
+  _sendMessage(text: text); // envia a mensagem para o banco de dados firebase
+}
+
+void _sendMessage({String text, String imgUrl}) { // metodo que envia a mensagem para o firebase
+  Firestore.instance.collection("messages").add(
+    {
+      "text" : text,
+      "imgUrl" : imgUrl,
+      "senderName" : googleSingIn.currentUser.displayName,
+      "senderPhotoUrl" : googleSingIn.currentUser.photoUrl
+    }
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -122,6 +139,9 @@ class TextComposer extends StatefulWidget {
 }
 
 class _TextComposerState extends State<TextComposer> {
+
+  final _textController = TextEditingController();
+
   bool _isComposing =
       false; // bool que controla o estado do botão de enviar mensagem
 
@@ -148,6 +168,10 @@ class _TextComposerState extends State<TextComposer> {
             // Campo de texto para o usuário mandar mensagem
             Expanded(
               child: TextField(
+                controller: _textController,
+                onSubmitted: (text) { // função do botão de enviar do teclado
+                  _handleSubmitted(text); // chamamos _handleSubmitted para enviar mensagem
+                },
                 decoration:
                     InputDecoration.collapsed(hintText: "Enviar uma mensagem"),
                 onChanged: (text) {
@@ -164,13 +188,17 @@ class _TextComposerState extends State<TextComposer> {
                     ? CupertinoButton(
                         child: Text("Enviar"),
                         onPressed: _isComposing
-                            ? () {}
+                            ? () {
+                          _handleSubmitted(_textController.text);
+                        }
                             : null // A ação só irá acontecer caso o usuario esteja digitando algo
                         )
                     : IconButton(
                         icon: Icon(Icons.send),
                         onPressed: _isComposing
-                            ? () {}
+                            ? () {
+                          _handleSubmitted(_textController.text);
+                        }
                             : null // A ação só irá acontecer caso o usuario esteja digitando algo
                         ))
           ],
@@ -215,4 +243,3 @@ class ChatMessage extends StatelessWidget {
     );
   }
 }
-
