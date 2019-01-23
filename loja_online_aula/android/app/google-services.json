@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "1046467140004",
+    "firebase_url": "https://lojaflutteraula.firebaseio.com",
+    "project_id": "lojaflutteraula",
+    "storage_bucket": "lojaflutteraula.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1046467140004:android:e453cd0b040aaaf3",
+        "android_client_info": {
+          "package_name": "br.com.carvalho.lojaonlineaula"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1046467140004-vhi2frek87l2nmg9gjpfplhi30faee2m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCRVbzj2IJxWK1ghQGj3p1sG1PLPoP12aU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
