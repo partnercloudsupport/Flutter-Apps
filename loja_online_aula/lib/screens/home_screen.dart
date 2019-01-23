@@ -11,7 +11,7 @@ class HomeScreen extends StatelessWidget {
       controller: _pageController,
       physics: NeverScrollableScrollPhysics(), // desabilita função de rolar pro lado a tela
       children: <Widget>[
-        HomeTab()
+        HomeTab(),
       ],
     );
   }
