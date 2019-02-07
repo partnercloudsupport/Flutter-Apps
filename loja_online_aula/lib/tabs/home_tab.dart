@@ -3,6 +3,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:transparent_image/transparent_image.dart';
 
+/*
+* Tela que irá carregar as imagens e to.do o corpo do app
+*
+* */
+
 class HomeTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
