@@ -1,6 +1,8 @@
 import 'dart:async';
+import '../ blocs/bloc_validators.dart';
 
-class Bloc {
+// ainda tenho dúvida do porque usar o Object!!!
+class Bloc extends Object with Validator {
   final _emailController = StreamController<String>();
   final _passwordController = StreamController<String>();
 
@@ -9,8 +11,9 @@ class Bloc {
   Function(String) get changePassword => _passwordController.sink.add;
 
   // Retrieve data of Stream
-  Stream<String> get email => _emailController.stream;
-  Stream<String> get password => _passwordController.stream;
+  // Colocamos o transformer para validar a saída da stream que será usada
+  Stream<String> get email => _emailController.stream.transform(validateEmail);
+  Stream<String> get password => _passwordController.stream.transform(validatePassword);
 
 
   void dispose(){
@@ -19,3 +22,6 @@ class Bloc {
   }
 
 }
+
+// Global instance of bloc
+final bloc = Bloc();

@@ -19,6 +19,4 @@ class Validator {
         sink.addError('Please at least 6 characteres');
     }
   );
-
-
 }
