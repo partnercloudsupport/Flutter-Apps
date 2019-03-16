@@ -63,12 +63,22 @@ class NewsDbProvider {
     );
     // verifica se o documento existe 
     if(maps.length > 0) {
-
+      // usamos maps.first pois só queremos o primeiro map da lista
+      // pois só terá os casos: 1 map (o que queremos)
+      // 0 maps (não há documentos)
+      return ItemModel.fromDb(maps.first);
     }
     // se não houver nenhum documento, retornamos null especificando
     // que não há nenhum documento com esse ID
     return null;
 
+  }
+
+  // Adiciona 1 item (ItemModel) no banco de dados 
+  addItem(ItemModel item) {
+    // passamos a table do nosso banco de dados
+    // passamos um map que tem os dados pra serem adicionados no banco de dados
+    db.insert("items", item.toMap());
   }
 
 }
