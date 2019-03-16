@@ -24,8 +24,27 @@ class NewsDbProvider {
     db = await openDatabase(// funçao que inicia (se não existe) ou cria o bando de dados
       path,
       version: 1,
+      // usamos o newsDb pois ainda não iniciamos a variavel db
+      // newsDb é apenas uma conexão com o banco de dados
       onCreate: (Database newsDb, int version){
-
+        // String multi-line usamos """ multi-line """
+        newsDb.execute("""
+          CREATE TABLE Items
+          (
+            id INTEGER PRIMARY KEY,
+            type TEXT,
+            by TEXT,
+            time INTEGER,
+            parent INTEGER,
+            kids BLOB, 
+            dead INTEGER,
+            delete INTEGER,
+            url TEXT,
+            score INTEGER,
+            title TEXT,
+            descendants INTEGER
+          )
+        """);
       }
     );
   }
