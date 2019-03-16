@@ -10,7 +10,7 @@ class NewsDbProvider {
   Database db; 
 
   // Cria e inicia o banco de dados
-  init () async {
+  init() async {
     // Obtém a o diretório de onde podemos acessar os documentos
     // de forma segura do nosso App
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
@@ -78,7 +78,7 @@ class NewsDbProvider {
   addItem(ItemModel item) {
     // passamos a table do nosso banco de dados
     // passamos um map que tem os dados pra serem adicionados no banco de dados
-    db.insert("items", item.toMap());
+    return db.insert("items", item.toMap());
   }
 
 }
