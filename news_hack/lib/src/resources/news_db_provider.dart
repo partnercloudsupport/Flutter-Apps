@@ -48,4 +48,27 @@ class NewsDbProvider {
       }
     );
   }
+
+  // Obtem um item do banco de dados
+  fetchItem(int id) async {
+    // obtemos os dados da table items
+    // da row ID = id
+    // todas as colunas
+    // retorna Future<List<Map<String, dynamic>>>
+    final maps = await db.query(
+      'items',
+      columns: null, // não especificamos qual coluna queremos, obtemos todas
+      where: "id = ?", // qual linha queremos obter os dados
+      whereArgs: [id]
+    );
+    // verifica se o documento existe 
+    if(maps.length > 0) {
+
+    }
+    // se não houver nenhum documento, retornamos null especificando
+    // que não há nenhum documento com esse ID
+    return null;
+
+  }
+
 }
