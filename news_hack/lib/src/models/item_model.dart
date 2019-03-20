@@ -54,6 +54,7 @@ class ItemModel {
       descendants =parsedJson['descendants'];
 
   // função que transforma o ItemModel em map
+  // usado no formato do banco de dados
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       "id": id,
@@ -68,7 +69,7 @@ class ItemModel {
       "descendants":descendants,
       "dead": dead ? 1 : 0,
       "deleted":deleted ? 1 : 0,
-      "kids":jsonEncode(kids)
+      "kids":jsonEncode(kids),
     };
   }
 

@@ -10,7 +10,7 @@ class NewsDbProvider {
   Database db; 
 
   // Cria e inicia o banco de dados
-  init() async {
+  void init() async {
     // Obtém a o diretório de onde podemos acessar os documentos
     // de forma segura do nosso App
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
@@ -20,7 +20,7 @@ class NewsDbProvider {
     // string obtida do join
     final path = join(documentsDirectory.path, 'items.db');
 
-    
+    // criamos o documento
     db = await openDatabase(// funçao que inicia (se não existe) ou cria o bando de dados
       path,
       version: 1,
@@ -50,7 +50,7 @@ class NewsDbProvider {
   }
 
   // Obtem um item do banco de dados
-  fetchItem(int id) async {
+  Future<ItemModel> fetchItem(int id) async {
     // obtemos os dados da table items
     // da row ID = id
     // todas as colunas
@@ -75,7 +75,7 @@ class NewsDbProvider {
   }
 
   // Adiciona 1 item (ItemModel) no banco de dados 
-  addItem(ItemModel item) {
+  Future<int> addItem(ItemModel item) {
     // passamos a table do nosso banco de dados
     // passamos um map que tem os dados pra serem adicionados no banco de dados
     return db.insert("items", item.toMap());

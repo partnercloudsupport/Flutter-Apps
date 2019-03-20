@@ -1,3 +1,8 @@
+// Classe que fará a intermediação dos providers de modo
+// que nosso app não precise utilizar a lógica direntamente
+// dos providers, simplificando e tendo melhor controle
+// de quando usar os dois providers
+
 import 'dart:async';
 import 'news_api_provider.dart';
 import 'news_db_provider.dart';
@@ -8,12 +13,26 @@ class Repository {
   NewsDbProvider dbProvider =NewsDbProvider();
   NewsApiProvider apiProvider =NewsApiProvider();
 
-  fetchTopIds() {
-
+  // Returns top Ids
+  Future<List<int>> fetchTopIds() {
+    return apiProvider.fetchTopIds();
   }
 
-  fetchItem() {
-
+  // Returns a ItemModel
+  Future<ItemModel> fetchItem(int id) async {
+    // Search first in DB
+    var item = await dbProvider.fetchItem(id);
+    // Verify if there is a Item in the DB
+    if(item != null)
+      return item;
+    
+    // If not, use apoProvider to provide the Item
+    item = await apiProvider.fetchItem(id);
+    // put the item in DB for the case of need then
+    // It Don't used await because we don't need to await
+    // to put it in the Db. We just want to returns a Item to fetchItem 
+    dbProvider.addItem(item);
+    // returns a item
+    return item;
   }
-
 }
