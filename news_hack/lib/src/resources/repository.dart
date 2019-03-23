@@ -36,3 +36,14 @@ class Repository {
     return item;
   }
 }
+
+// Interface of the two functions of API provider and DB provider
+abstract class Source {
+  Future<List<int>> fetchTopIds();
+  Future<ItemModel> fetchItem(int id);
+}
+
+// Interface of the functions that store data in the repository
+abstract class Cache {
+  Future<int> addItem(ItemModel item);
+}

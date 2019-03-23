@@ -4,10 +4,18 @@ import 'dart:io';
 import 'package:path/path.dart';
 import 'dart:async';
 import '../models/item_model.dart';
+import 'repository.dart';
 
-class NewsDbProvider {
+class NewsDbProvider implements Source, Cache{
   // Variable that is the connection with our database
   Database db; 
+
+  // We create this function to no have problem with abstract class
+  // source, it's only for a example
+
+  Future<List<int>> fetchTopIds() {
+    return null;
+  }
 
   // Cria e inicia o banco de dados
   void init() async {
